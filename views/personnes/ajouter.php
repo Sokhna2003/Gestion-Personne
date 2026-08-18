@@ -22,25 +22,63 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     } else {
 
-        $photo = file_get_contents($_FILES["photo"]["tmp_name"]);
+        $photo = $_FILES["photo"];
 
-        $controller = new PersonneController();
+        // Taille maximale : 5 Mo
+        $tailleMax = 5 * 1024 * 1024;
 
-        $resultat = $controller->ajouter(
-            $nom,
-            $prenom,
-            $photo
-        );
+        // Types MIME autorisés
+        $typesAutorises = [
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+        ];
 
-        if ($resultat) {
+        // Vérification de la taille
+        if ($photo["size"] > $tailleMax) {
 
-            $message = "La personne a été ajoutée avec succès.";
-            $typeMessage = "success";
+            $message = "La photo ne doit pas dépasser 5 Mo.";
+            $typeMessage = "error";
+
+        // Vérification du type réel du fichier
+        } elseif (!in_array($photo["type"], $typesAutorises, true)) {
+
+            $message = "Format de photo non autorisé. Utilisez JPG, PNG ou WEBP.";
+            $typeMessage = "error";
 
         } else {
 
-            $message = "Une erreur est survenue lors de l'ajout.";
-            $typeMessage = "error";
+            // Vérification supplémentaire du contenu de l'image
+            $imageInfo = getimagesize($photo["tmp_name"]);
+
+            if ($imageInfo === false) {
+
+                $message = "Le fichier sélectionné n'est pas une image valide.";
+                $typeMessage = "error";
+
+            } else {
+
+                $photoData = file_get_contents($photo["tmp_name"]);
+
+                $controller = new PersonneController();
+
+                $resultat = $controller->ajouter(
+                    $nom,
+                    $prenom,
+                    $photoData
+                );
+
+                if ($resultat) {
+
+                    $message = "La personne a été ajoutée avec succès.";
+                    $typeMessage = "success";
+
+                } else {
+
+                    $message = "Une erreur est survenue lors de l'ajout.";
+                    $typeMessage = "error";
+                }
+            }
         }
     }
 }
