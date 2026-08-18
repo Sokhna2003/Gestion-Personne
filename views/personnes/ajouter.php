@@ -110,6 +110,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <div class="w-full max-w-lg rounded-2xl bg-white p-8 shadow-lg">
 
+        <a
+            href="../../public/index.php"
+            class="mb-6 inline-flex items-center text-sm font-medium
+                text-gray-500 transition hover:text-blue-600">
+            ← Retour à l'accueil
+        </a>
+
             <div class="mb-8 text-center">
 
                 <h1 class="text-3xl font-bold text-gray-800">
@@ -216,6 +223,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </p>
 
                 </div>
+
+                <a
+                    href="lister.php"
+                    class="mt-3 block w-full rounded-lg border border-gray-300
+                        px-4 py-3 text-center font-semibold text-gray-700
+                        transition hover:bg-gray-100"
+                >
+                    Voir la liste des personnes
+                </a>
 
                 <!-- Bouton -->
                 <button

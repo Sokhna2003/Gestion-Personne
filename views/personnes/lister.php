@@ -30,6 +30,14 @@ $personnes = $controller->lister();
 
     <div class="mx-auto max-w-6xl px-4 py-10">
 
+        <a
+            href="../../public/index.php"
+            class="mb-6 inline-flex items-center text-sm font-medium
+                   text-gray-500 transition hover:text-blue-600"
+        >
+            ← Retour à l'accueil
+        </a>
+
         <!-- En-tête -->
         <div class="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
