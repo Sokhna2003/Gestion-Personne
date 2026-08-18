@@ -1,3 +1,52 @@
+<?php
+
+require_once __DIR__ . "/../../controllers/PersonneController.php";
+
+$message = "";
+$typeMessage = "";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $nom = trim($_POST["nom"] ?? "");
+    $prenom = trim($_POST["prenom"] ?? "");
+
+    if ($nom === "" || $prenom === "") {
+
+        $message = "Veuillez remplir tous les champs.";
+        $typeMessage = "error";
+
+    } elseif (!isset($_FILES["photo"]) || $_FILES["photo"]["error"] !== UPLOAD_ERR_OK) {
+
+        $message = "Veuillez sélectionner une photo valide.";
+        $typeMessage = "error";
+
+    } else {
+
+        $photo = file_get_contents($_FILES["photo"]["tmp_name"]);
+
+        $controller = new PersonneController();
+
+        $resultat = $controller->ajouter(
+            $nom,
+            $prenom,
+            $photo
+        );
+
+        if ($resultat) {
+
+            $message = "La personne a été ajoutée avec succès.";
+            $typeMessage = "success";
+
+        } else {
+
+            $message = "Une erreur est survenue lors de l'ajout.";
+            $typeMessage = "error";
+        }
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -7,12 +56,7 @@
 
     <title>Ajouter une personne</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style type="text/tailwindcss">
-      @theme {
-        --color-clifford: #da373d;
-      }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen bg-gray-100">
@@ -22,6 +66,7 @@
         <div class="w-full max-w-lg rounded-2xl bg-white p-8 shadow-lg">
 
             <div class="mb-8 text-center">
+
                 <h1 class="text-3xl font-bold text-gray-800">
                     Ajouter une personne
                 </h1>
@@ -29,7 +74,21 @@
                 <p class="mt-2 text-gray-500">
                     Remplissez les informations ci-dessous
                 </p>
+
             </div>
+
+            <?php if ($message !== ""): ?>
+
+                <div
+                    class="mb-6 rounded-lg px-4 py-3 text-sm font-medium
+                    <?= $typeMessage === "success"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700" ?>"
+                >
+                    <?= htmlspecialchars($message) ?>
+                </div>
+
+            <?php endif; ?>
 
             <form
                 action=""
@@ -40,6 +99,7 @@
 
                 <!-- Nom -->
                 <div>
+
                     <label
                         for="nom"
                         class="mb-2 block text-sm font-semibold text-gray-700"
@@ -51,16 +111,19 @@
                         type="text"
                         id="nom"
                         name="nom"
+                        value="<?= htmlspecialchars($_POST["nom"] ?? "") ?>"
                         placeholder="Entrez le nom"
                         required
                         class="w-full rounded-lg border border-gray-300 px-4 py-3
                                text-gray-700 outline-none transition
                                focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                     >
+
                 </div>
 
                 <!-- Prénom -->
                 <div>
+
                     <label
                         for="prenom"
                         class="mb-2 block text-sm font-semibold text-gray-700"
@@ -72,16 +135,19 @@
                         type="text"
                         id="prenom"
                         name="prenom"
+                        value="<?= htmlspecialchars($_POST["prenom"] ?? "") ?>"
                         placeholder="Entrez le prénom"
                         required
                         class="w-full rounded-lg border border-gray-300 px-4 py-3
                                text-gray-700 outline-none transition
                                focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                     >
+
                 </div>
 
                 <!-- Photo -->
                 <div>
+
                     <label
                         for="photo"
                         class="mb-2 block text-sm font-semibold text-gray-700"
@@ -103,6 +169,7 @@
                     <p class="mt-2 text-xs text-gray-500">
                         Formats acceptés : JPG, JPEG, PNG, WEBP
                     </p>
+
                 </div>
 
                 <!-- Bouton -->
