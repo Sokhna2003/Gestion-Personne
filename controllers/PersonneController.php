@@ -18,12 +18,15 @@ class PersonneController
     public function ajouter(
         string $nom,
         string $prenom,
-        string $photo
+        string $photo,
+        string $photoType
     ): bool {
+
         return $this->personne->ajouter(
             $nom,
             $prenom,
-            $photo
+            $photo,
+            $photoType
         );
     }
 
