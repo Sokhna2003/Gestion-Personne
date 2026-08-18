@@ -1,4 +1,3 @@
-```php
 <?php
 
 require_once __DIR__ . "/../../controllers/PersonneController.php";
@@ -84,7 +83,7 @@ $personnes = $controller->lister();
                             <?php if (!empty($personne["photo"])): ?>
 
                                 <img
-                                    src="data:image/jpeg;base64,<?= base64_encode($personne["photo"]) ?>"
+                                    src="data:<?= htmlspecialchars($personne["photo_type"]) ?>;base64,<?= base64_encode($personne["photo"]) ?>"
                                     alt="<?= htmlspecialchars($personne["prenom"] . " " . $personne["nom"]) ?>"
                                     class="h-full w-full object-cover"
                                 >

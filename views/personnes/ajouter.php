@@ -65,7 +65,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $resultat = $controller->ajouter(
                     $nom,
                     $prenom,
-                    $photoData
+                    $photoData,
+                    $photo["type"]
                 );
 
                 if ($resultat) {

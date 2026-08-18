@@ -13,23 +13,28 @@ class Personne
     public function ajouter(
         string $nom,
         string $prenom,
-        string $photo
+        string $photo,
+        string $photoType
     ): bool {
-        $sql = "INSERT INTO {$this->table} (nom, prenom, photo)
-                VALUES (:nom, :prenom, :photo)";
+
+        $sql = "INSERT INTO {$this->table}
+                (nom, prenom, photo, photo_type)
+                VALUES
+                (:nom, :prenom, :photo, :photo_type)";
 
         $stmt = $this->connection->prepare($sql);
 
         $stmt->bindParam(":nom", $nom);
         $stmt->bindParam(":prenom", $prenom);
         $stmt->bindParam(":photo", $photo, PDO::PARAM_LOB);
+        $stmt->bindParam(":photo_type", $photoType);
 
         return $stmt->execute();
     }
 
     public function lister(): array
     {
-        $sql = "SELECT id, nom, prenom, photo
+        $sql = "SELECT id, nom, prenom, photo, photo_type
                 FROM {$this->table}
                 ORDER BY id DESC";
 
@@ -39,4 +44,3 @@ class Personne
         return $stmt->fetchAll();
     }
 }
-
